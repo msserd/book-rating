@@ -1,30 +1,33 @@
 <template>
-  <h1 class="header py-2">
-    Рейтинг книг
-  </h1>
-  <div class="justify-content-center d-flex gap-2">
-    <SButton color="green" @click="openModal(0)">Добавить книгу</SButton>
-    <SButton color="red" @click="clearRating">Сбросить рейтинг книг</SButton>
-  </div>
-  <div class="text-white justify-content-center d-flex mt-3">
-    <div class="card mx-auto text-dark p-2">
-      <span>Всего книг: {{ booksCount }} шт.</span>
-      <span>Средний рейтинг: {{ avgRating }}</span>
-    </div>
-  </div>
-  <div class="books p-3">
-    <BookCard v-for="book in books" :key="book.id" :book="book" @edit="openModal" @delete="deleteBook" @rating="setRating"/>
-  </div>
+    <MainLayout>    
+        <h1 class="header py-2">
+            Рейтинг книг
+        </h1>
+        <div class="justify-content-center d-flex gap-2">
+            <SButton color="green" @click="openModal(0)">Добавить книгу</SButton>
+            <SButton color="red" @click="clearRating">Сбросить рейтинг книг</SButton>
+        </div>
+        <div class="text-white justify-content-center d-flex mt-3">
+            <div class="card mx-auto text-dark p-2">
+            <span>Всего книг: {{ booksCount }} шт.</span>
+            <span>Средний рейтинг: {{ avgRating }}</span>
+            </div>
+        </div>
+        <div class="books p-3">
+            <BookCard v-for="book in books" :key="book.id" :book="book" @edit="openModal" @delete="deleteBook" @rating="setRating"/>
+        </div>
 
-  <SDialog v-if="isModalOpen" v-model="isModalOpen" :title="modalTitle" @hide="closeModal">
-    <BookForm ref="inputRef" :modelValue="bookData" :errorTitle="errorTitle" @update="updateBooks" @close="closeModal"/>
-  </SDialog>
+        <SDialog v-if="isModalOpen" v-model="isModalOpen" :title="modalTitle" @hide="closeModal">
+            <BookForm ref="inputRef" :modelValue="bookData" :errorTitle="errorTitle" @update="updateBooks" @close="closeModal"/>
+        </SDialog>
+  </MainLayout>
 </template>
 
 <script setup>
   import { ref, computed, watch, nextTick } from 'vue'
   import BookCard from '../components/BookCard.vue';
   import BookForm from '../components/BookForm.vue';
+  import MainLayout from '../layouts/MainLayout.vue'
   import { SButton, SDialog } from 'startup-ui';
 
   const props = defineProps({ books: Array })
@@ -141,28 +144,6 @@
 </script>
 
 <style>
-  .app{
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  #app{
-    min-height: 100vh;
-    background-image: url('/images/bg.jpg');
-  }
-
-  .s-canvas-header{
-    justify-content: center !important;
-  }
-
-  .s-canvas .s-section-h{
-    padding-top: 0 !important;
-  }
-
-  .s-button>svg:only-child{
-    margin-right: 0!important;
-  }
-
   .header{
     text-align: center;
     color: white;

@@ -1,8 +1,12 @@
 <template>
     <SCanvas>
         <div class="d-flex gap-2 justify-content-center mt-3">
-            <Link class="btn btn-primary" href="/">Рейтинг книг</Link>
-            <Link class="btn btn-primary" href="/about">О нас</Link>
+            <Link class="btn btn-primary" :class="{ active: $page.url === '/' }" href="/">Рейтинг книг</Link>
+            <Link class="btn btn-primary" :class="{ active: $page.url === '/about' }" href="/about">О нас</Link>
+            <Link class="btn btn-primary" :class="{ active: $page.url === '/dashboard' }" href="/dashboard">Дашборд</Link>
+            <Link class="btn btn-primary" :class="{ active: $page.url === '/profile' }" href="/profile">Профиль</Link>
+            <Link class="btn btn-primary" :class="{ active: $page.url === '/scroll' }" href="/scroll">Скролл</Link>
+            <Link class="btn btn-primary" :class="{ active: $page.url === '/form' }" href="/form">Форма</Link>
         </div>
         <div class="app">
             <slot />

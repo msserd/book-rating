@@ -1,0 +1,549 @@
+@import "normalize.css";
+@import "variables";
+@import "helpers";
+
+html {
+	height: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+a {
+    color: var(--s-primary);
+    text-decoration: none;
+    & > svg:first-child {
+        display: inline-block;
+        margin-right: 8px;
+    }
+    &:hover {
+        color: var(--s-primary-dark);
+    }
+}
+
+// Основная типографика
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, p, ol, ul {
+    margin: 0 0 var(--s-base-margin);
+    font-weight: normal;
+}
+h1, .h1 {
+    font-size: var(--s-h1-font-size);
+    font-weight: bold;
+    @include mobile(){
+        font-size: 22px;
+    }
+}
+h2, .h2 {
+    font-size: var(--s-h2-font-size);
+    font-weight: normal;
+    @include mobile(){
+        font-size: 20px;
+    }
+}
+h3, .h3 {
+    font-size: var(--s-h3-font-size);
+    @include mobile(){
+        font-size: 16px;
+    }
+}
+h4, .h4 {
+    font-size: var(--s-h4-font-size);
+    @include mobile(){
+        font-size: 14px;
+        font-weight: bold;
+    }
+}
+ul > li,
+ol > li {
+    margin-bottom: calc(var(--s-base-margin) / 2);
+}
+img {
+    max-width: 100%;
+}
+
+// Preloader
+@keyframes button-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+.loading {
+    &:not(.b-form) {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+    &.b-form {
+        .g-button {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.5;
+            color: var(--s-white);
+            &::after {
+                content: "";
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: auto;
+                border: 4px solid transparent;
+                border-top-color: #ffffff;
+                border-radius: 50%;
+                animation: button-spinner 1s ease infinite;
+            }
+        }
+    }
+}
+
+// Body
+body {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    margin-bottom: 0 !important;
+    #app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        background: var(--s-white);
+        flex-grow: 1;
+    }
+    .b-logo {
+        display: flex;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        align-items: center;
+        font-weight: bold;
+
+        svg {
+            height: 30px;
+            width: 30px;
+            margin-right: 1rem;
+        }
+
+        @include mobile() {
+            font-size: 12px;
+            img {
+                display: none;
+            }
+        }
+    }
+}
+
+// Таблицы
+.g-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--s-base-margin);
+    td {
+        padding: 0.8rem;
+        border-bottom: 1px solid var(--s-border);
+        a {
+            vertical-align: middle;
+        }
+        &:first-child {
+            padding-left: 0;
+        }
+        &:last-child {
+            padding-right: 0;
+        }
+        p:last-child {
+            margin: 0;
+        }
+        &.nowrap {
+            white-space: nowrap;
+        }
+        &.right {
+            text-align: right;
+        }
+        &.center {
+            text-align: center;
+        }
+    }
+    thead {
+        td {
+            font-weight: bold;
+            & a {
+                color: inherit;
+            }
+            & a:hover {
+                color: var(--s-primary);
+            }
+            &.asc a,
+            &.desc a {
+                color: var(--s-primary);
+                &:after {
+                    display: inline-block;
+                    vertical-align: top;
+                    content: "↓";
+                    margin-left: 0.3rem;
+                    font-size: 18px;
+                }
+            }
+            &.desc a:after {
+                content: "↑";
+            }
+        }
+    }
+    tfoot {
+        td {
+            background-color: var(--s-white);
+            font-weight: bold;
+        }
+    }
+    &.bordered {
+        th, td {
+            border: 1px solid var(--s-border);
+        }
+    }
+    &.striped {
+        tbody tr:nth-of-type(odd) {
+            background-color: var(--s-primary-lightest);
+        }
+    }
+    &.hoverable {
+        tbody tr:hover,
+        tbody tr.hover {
+            background-color: var(--s-primary-lightest);
+        }
+    }
+}
+.g-tablewrapper {
+    overflow-x: auto;
+}
+
+// Кнопки (напр. <Link class="g-button" />)
+.g-button {
+    display: inline-block;
+    box-sizing: border-box;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: var(--s-field-height);
+    padding: 0 1.5em;
+    border-radius: var(--s-border-radius);
+    background-color: var(--s-primary);
+    color: var(--s-white);
+    border: 1px var(--s-primary) solid;
+    &:hover {
+        background-color: var(--s-primary-dark);
+        border-color: var(--s-primary-dark);
+        color: var(--s-white);
+    }
+    &.outlined {
+        background-color: transparent;
+        color: var(--s-primary);
+        &:hover {
+            background-color: var(--s-primary);
+            border-color: var(--s-primary);
+            color: var(--s-white);
+        }
+    }
+    &.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+    &.fullwidth {
+        width: 100%;
+    }
+    &.loading {
+        opacity: 0.5;
+        cursor: wait;
+        pointer-events: none;
+    }
+}
+
+// Горизонтальный враппер
+.g-hwrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    & > .g-button {
+        align-self: flex-start;
+    }
+}
+
+// Действие-иконка
+.g-actionicon {
+    display: inline-block;
+    cursor: pointer;
+    width: 30px;
+    text-align: center;
+    color: var(--s-primary);
+    svg {
+        margin-left: 0;
+        margin-right: 0 !important;
+    }
+    & + & {
+        margin-left: calc(var(--s-base-margin) / 3);
+    }
+    &:hover {
+        color: var(--s-primary-dark);
+    }
+    &.danger {
+        color: var(--s-red);
+        &:hover {
+            color: var(--s-red-dark);
+        }
+    }
+}
+
+// Заглавие страницы
+.g-titlebar {
+    display: flex;
+    margin-bottom: var(--s-base-margin);
+    & > h1,
+    & > h2,
+    & > h3,
+    & > p,
+    & > a,
+    & > div {
+        margin: auto 0;
+        &:not(:first-child) {
+            margin-left: var(--s-base-margin);
+        }
+        &.right {
+            margin-left: auto;
+        }
+    }
+}
+
+.g-content {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+$titleWidth: 450px;
+$iconWidth: 18px;
+.g-tree {
+    margin-bottom: 2rem;
+    &-header {
+        font-weight: bold;
+        border-bottom: 1px var(--s-border) solid;
+        .for_title {
+            padding-left: $iconWidth + 6px;
+            width: $titleWidth;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    }
+    &-row {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+    }
+    &-cell {
+        font-size: 1rem;
+        color: var(--s-black);
+        padding: 10px 0;
+        width: 120px;
+        &.for_title {
+            width: $titleWidth;
+            white-space: normal;
+            .el-tree-node__children & {
+                width: calc($titleWidth - $iconWidth);
+                .el-tree-node__children & {
+                    width: calc($titleWidth - 2 * $iconWidth);
+                    .el-tree-node__children & {
+                        width: calc($titleWidth - 3 * $iconWidth);
+                        .el-tree-node__children & {
+                            width: calc($titleWidth - 4 * $iconWidth);
+                        }
+                    }
+                }
+            }
+        }
+        &.align_center {
+            text-align: center;
+        }
+        &.align_right {
+            text-align: right;
+        }
+    }
+    .el-tree-node__expand-icon {
+        // Размеры этой иконки влияют на положение drop-indicator, поэтому должно прилегать к верху и низу
+        padding: 14px 6px !important;
+    }
+    .el-tree-node__content {
+        height: auto;
+        border-bottom: 1px var(--s-border) solid;
+    }
+    .el-tree__drop-indicator {
+        height: 3px !important;
+    }
+    &.with_checkboxes &-header {
+        padding-left: 23px;
+    }
+}
+
+// Информационная ссылка
+.g-infolink {
+    color: var(--s-primary);
+    border-bottom: 1px var(--s-primary) dashed;
+    cursor: help;
+    &:hover {
+        color: var(--s-primary-dark);
+    }
+}
+
+// Оповещение
+.g-alert {
+    display: flex;
+    align-items: center;
+    background-color: var(--s-bg);
+    color: var(--s-border-light);
+    border-radius: var(--s-border-radius);
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    & > p {
+        margin-bottom: 0;
+    }
+    &.note {
+        background-color: var(--s-primary-lightest);
+    }
+    &.attention {
+        background-color: var(--s-yellow-light);
+    }
+    &.success {
+        background-color: var(--s-green-lightest);
+        color: var(--s-green-dark);
+    }
+    &.error {
+        background-color: var(--s-red-lightest);
+        border-color: var(--s-red);
+        color: var(--s-red);
+    }
+}
+
+// Статус
+.g-status {
+    display: inline-block;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: var(--s-bg);
+    border-radius: 6px;
+    line-height: 20px;
+    padding: 0 10px;
+    vertical-align: middle;
+    text-align: center;
+    &.green {
+        background-color: var(--s-green-lightest);
+    }
+    &.red {
+        background-color: var(--s-red);
+        color: var(--s-white);
+    }
+}
+
+// Форматированная статистика
+.g-stat {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    > div:first-child {
+        width: 170px;
+    }
+    > div:last-child {
+        font-weight: bold;
+        &.withbutton {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+        .large {
+            font-size: var(--s-h2-font-size);
+            font-weight: bold;
+            line-height: 32px;
+
+            & + span {
+                margin-left: 5px;
+                font-weight: normal;
+            }
+        }
+    }
+    &.wide {
+        justify-content: space-between;
+        & > div:first-child {
+            width: calc(100% - 70px)
+        }
+        & > div:last-child {
+            text-align: right;
+            width: 50px;
+        }
+    }
+}
+
+// Острова дешборда
+.b-dashboard {
+    column-count: 2;
+    column-gap: 30px;
+    margin-top: 0.5rem;
+    @include mobile(){
+        column-count: 1;
+    }
+
+    &-item {
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 30px;
+        background-color: var(--s-primary-lightest);
+        border-radius: var(--s-border-radius);
+        padding: 1.5rem;
+        box-sizing: border-box;
+        break-inside: avoid;
+
+        &-title,
+        .b-plan-title {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2rem;
+
+            a {
+                margin-left: auto;
+                font-size: 1rem;
+                font-weight: normal;
+
+                svg {
+                    font-size: 0.8em;
+                }
+            }
+        }
+
+        &-bignumber {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 2rem;
+
+            svg {
+                font-size: 24px;
+                margin-right: 0.8rem;
+            }
+        }
+
+        & > .g-button {
+            width: 100%;
+        }
+
+        &.style_red {
+            background-color: var(--s-red-light);
+        }
+    }
+}

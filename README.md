@@ -13,7 +13,7 @@ cp .env.example .env
 В .env заполняем DB_USERNAME DB_PASSWORD
 
 ```bash
-sail artisan key:generate
+php artisan key:generate
 ```
 
 ```bash

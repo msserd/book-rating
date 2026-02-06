@@ -33,7 +33,7 @@
     }
 
     .s-canvas .s-section-h{
-        padding-top: 0 !important;
+        /* padding-top: 0 !important; */
     }
 
     .s-button>svg:only-child{

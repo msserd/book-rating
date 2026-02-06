@@ -1,5 +1,3 @@
-import './bootstrap';
-
 import { createInertiaApp, Link, Head } from '@inertiajs/vue3';
 import { createApp, h } from 'vue';
 
@@ -8,12 +6,12 @@ import * as filters from './filters.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './font-awesome.js';
 
+import 'startup-ui/dist/index.css' 
+
 import Admin from '../views/layouts/Admin.vue';
 import '../css/app.scss';
 
-import 'startup-ui/dist/index.css' 
-
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = 'Book rating';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

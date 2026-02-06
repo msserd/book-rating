@@ -22,15 +22,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class)->scoped(['user' => 'username']);
 
     //Route::get('/', [BookController::class, 'index']);
-
-    Route::get('/about', [AboutController::class, 'index']);
-
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-
-    Route::get('/profile', [ProfileController::class, 'index']);
-
-    Route::get('/scroll', [ScrollController::class, 'index']);
-
-    Route::get('/form', [FormController::class, 'index']);
-    Route::post('/form', [FormController::class, 'store']);
 })->where(['user' => '[a-zA-Z0-9]+']);

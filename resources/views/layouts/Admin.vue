@@ -3,7 +3,7 @@
         <template #header>
             <SHeaderLogo href='/' class="mr-4" />
             <template v-if="authUser && authUser.username">
-                <div class="s-headerlink">
+                <div v-if="authUser.role == 'admin'" class="s-headerlink">
                     <Link href="/users/">Список пользователей</Link>
                 </div>
 

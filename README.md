@@ -34,3 +34,4 @@ sail npm install
 ```bash
 sail npm run dev
 ```
+Проект открывается по адресу http://localhost/

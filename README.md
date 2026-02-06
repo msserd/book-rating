@@ -10,9 +10,7 @@ composer install
 cp .env.example .env
 ```
 
-```bash
 В .env заполняем DB_USERNAME DB_PASSWORD
-```
 
 ```bash
 sail artisan key:generate

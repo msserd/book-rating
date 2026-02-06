@@ -1,3 +1,36 @@
 ## Запуск проекта
 
-Будет обновлено
+Клонируем репозиторий. Должен быть открыть Docker. После этого команды по порядку.
+
+```bash
+composer install
+```
+
+```bash
+cp .env.example .env
+```
+
+```bash
+В .env заполняем DB_USERNAME DB_PASSWORD
+```
+
+```bash
+sail artisan key:generate
+```
+
+```bash
+sail up -d
+```
+
+В сидере будет юзер admin/admin
+```bash
+sail artisan migrate:fresh --seed
+```
+
+```bash
+sail npm install
+```
+
+```bash
+sail npm run dev
+```

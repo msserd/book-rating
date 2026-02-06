@@ -2,7 +2,7 @@
     <div class="s-header-logo">
         <Link class="s-logo" :href="href">
             <FontAwesomeIcon icon="star" />
-            <span>ExampleApp</span>
+            <span>BookRating</span>
         </Link>
     </div>
 </template>

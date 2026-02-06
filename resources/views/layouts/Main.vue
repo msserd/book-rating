@@ -3,8 +3,10 @@
         <template #header>
             <SHeaderLogo href='/' class="mr-4" />
             <template v-if="authUser && authUser.username">
-                <div v-if="authUser.role == 'admin'" class="s-headerlink">
-                    <Link href="/users/">Список пользователей</Link>
+                <div class="s-headerlink">
+                    <Link v-if="authUser.role == 'admin'" href="/users/">Список пользователей</Link>
+                    <Link href="/books">Рейтинг книг</Link>
+                    <Link href="/my-books">Мои книги</Link>
                 </div>
 
                 <div class="s-headerlink right">
@@ -13,7 +15,10 @@
                 </div>
             </template>
 
-            <template v-if="!authUser">
+            <template v-if="!authUser.id">
+                <div class="s-headerlink">
+                    <Link href="/books">Рейтинг книг</Link>
+                </div>
                 <div class="s-headerlink right">
                     <Link href="/login">Авторизация</Link>
                 </div>
@@ -32,7 +37,7 @@
     </SCanvas>
     <SFooter>
         <div class="s-footer-h">
-            <span>&copy; ExampleApp, 2024</span>
+            <span>&copy; Book rating, 2026</span>
         </div>
     </SFooter>
 </template>
@@ -59,32 +64,35 @@ function logout() {
 </script>
 
 <style lang="scss">
-.s-canvas {
-    &-header {
-        color: var(--s-white) !important;
+    .s-canvas {
+        &-header {
+            color: var(--s-white) !important;
+        }
+
+        &-subheader {
+            background-color: var(--s-primary-darkest);
+        }
     }
 
-    &-subheader {
-        background-color: var(--s-primary-darkest);
+    .s-headerlink {
+        display: flex;
+        white-space: nowrap;
+        gap: 2rem;
+
+        svg {
+            margin-right: 0.3em;
+        }
+
+        a:hover {
+            color: var(--s-white);
+        }
     }
-}
 
-.s-headerlink {
-    display: flex;
-    white-space: nowrap;
-    gap: 2rem;
-
-    svg {
-        margin-right: 0.3em;
+    #app{
+        min-height: 100vh;
     }
 
-    a:hover {
-        color: var(--s-white);
+    .s-button>svg:only-child{
+        margin-right: 0!important;
     }
-}
-
-.s-subheader-title {
-    margin: 2rem 0 1rem;
-    font-size: var(--s-h2-font-size);
-}
 </style>

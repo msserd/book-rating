@@ -3,22 +3,139 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
+use App\Models\Book;
+
+use App\Http\Requests\Book\BookRequest;
+
 use Inertia\Inertia;
 
 class BookController extends Controller
 {
-    public function index() {
+    /**
+     * Отображение общего списка всех книг
+     */
+    public function index()
+    {
+        return $this->renderBooks(
+            Book::query(), 
+            'Рейтинг книг', 
+            false
+        );
+    }
 
-        $books = [
-            ['id' => 1, 'title' => 'Ревизор: возвращение в СССР 51', 'descr' => 'Приключения московского аудитора, попавшего из нашего времени в СССР, продолжаются. Павла ставят перед нелегким выбором, но он предпочитает остаться верен своим принципам. Даже если в результате и будут определенные последствия.', 'genre' => 'Приключенческая фантастика', 'img' => 'book1.jpg', 'adult' => false, 'rating' => 0],
-            ['id' => 2, 'title' => 'Пандора', 'descr' => 'Главная героиня Дарси ведет идеальную жизнь, которая внезапно рушится, когда ее похищает сын влиятельного преступника. С этого момента ее жизнь наполняется опасностями, интригами и неожиданными поворотами.', 'genre' => 'Остросюжетный любовный роман', 'img' => 'book2.jpg', 'adult' => true, 'rating' => 5],
-            ['id' => 3, 'title' => 'Последний день года', 'descr' => 'Накануне Нового года несколько старых друзей и один случайный человек собираются в загородном доме, чтобы как следует повеселиться и отвлечься от шума мегаполиса. Однако всего через несколько часов обильный снегопад превращает дом, стоящий в глуши, в ловушку, а гости новогодней вечеринки один за другим становятся жертвами неизвестного психопата.', 'genre' => 'Триллер', 'img' => 'book3.jpg', 'adult' => false, 'rating' => 3],
-            ['id' => 4, 'title' => 'Психология влияния. 7-е расширенное издание', 'descr' => 'Вы когда-нибудь задумывались, почему говорите «да», даже когда внутренний голос шепчет «нет»? Почему так сложно отказать навязчивому продавцу или коллеге, манипулирующей вашим временем? Мир влияния и манипуляций – это не магия, а наука, и Роберт Чалдини, авторитетный психолог с многолетним опытом, раскрывает ее главные секреты.', 'genre' => 'Психология', 'img' => 'book4.jpg', 'adult' => false, 'rating' => 4],
-            ['id' => 5, 'title' => 'Квентин Дорвард', 'descr' => 'Действие романа происходит в средневековой Франции, на фоне войн, сложных придворных интриг и взаимной вражды двух великих государей, беспринципного и осторожного французского короля Людовика XI и его антипода, безрассудного и воинственного герцога Бургундского – Карла Смелого.', 'genre' => 'Исторические приключения', 'img' => 'book5.jpg', 'adult' => false, 'rating' => 5],
+    /**
+     * Отображение книг юзера
+     */
+    public function myBooks()
+    {
+        return $this->renderBooks(
+            Book::query()->where('user_id', auth()->id()), 
+            'Мои книги', 
+            true
+        );
+    }
+
+    /**
+     * Универсальный метод для подготовки данных и рендеринга страницы списка книг
+     */
+    public function renderBooks($query, $title, $isMyBooks)
+    {
+        $books = $query->withAvg('ratings as average_rating', 'rating')
+            ->with(['ratings' => function($q) { 
+                $q->where('user_id', auth()->id()); 
+            }])
+            ->latest()
+            ->get()
+            ->map(function($book) {
+                $book->user_rating = auth()->check() ? ($book->ratings->first()?->rating ?? 0) : 0;
+                return $book;
+            });
+
+        $stats = [
+            'count' => $books->count(),
+            'total_avg' => number_format($books->avg('average_rating') ?? 0, 2)
         ];
 
-        return Inertia::render('Book', [
-            'books' => $books
+        return inertia('Book/Index', [
+            'books' => $books,
+            'title' => $title,
+            'isMyBooks' => $isMyBooks,
+            'stats' => $stats,
         ]);
+    }
+
+    /**
+     * Страница создания книги
+     */
+    public function create()
+    {
+        return Inertia::render('Book/Create', [
+            'backUrl' => url()->previous()
+        ]);
+    }
+
+    /**
+     * Сохранение новой книги
+     */
+    public function store(BookRequest $request)
+    {
+        $data = array_merge($request->validated(), [
+            'user_id' => auth()->id(),
+        ]);
+        
+        Book::create($data);
+
+        $url = $request->input('redirect_to') ?? route('books.index');
+
+        if (str_contains($url, '/create')) 
+            $url = route('books.index');
+
+        return redirect()->to($url);
+    }
+
+    /**
+     * Страница обновления книги
+     */
+    public function edit(Book $book)
+    {
+        Gate::authorize('edit', $book);
+
+        $book->genre = explode(', ', $book->genre);
+
+        return Inertia::render('Book/Edit', [
+            'book' => $book,
+            'backUrl' => url()->previous(),
+        ]);
+    }
+
+    /**
+     * Обновление данных книги
+     */
+    public function update(BookRequest $request, Book $book)
+    {
+        Gate::authorize('update', $book);
+
+        $book->update($request->validated());
+
+        $url = $request->input('redirect_to') ?? route('books.index');
+
+        if (str_contains($url, '/create')) 
+            $url = route('books.index');
+
+        return redirect()->to($url);
+    }
+
+    /**
+     * Удаление книги
+     */
+    public function destroy(Book $book)
+    {
+        Gate::authorize('delete', $book);
+
+        $book->delete();
+
+        return back();
     }
 }

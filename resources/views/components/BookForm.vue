@@ -1,12 +1,13 @@
 <template>
-    <SForm @submit.prevent="$emit('update')" :modelValue="modelValue">
+    <SForm @submit.prevent="$emit('submit')" v-model="form" class="mb-3">
         <SFormRow title="Название" name="title">
-            <SInput ref="inputTitle" />
-            <div class="form-text text-danger" v-if="errorTitle">Название не должно быть пустым.</div>
+            <SInput />
+            <div class="form-text text-danger" v-if="form.errors.title">{{ form.errors.title }}</div>
         </SFormRow>
 
-        <SFormRow title="Описание" name="descr">
+        <SFormRow title="Описание" name="description">
             <SInput type="textarea"/>
+            <div class="form-text text-danger" v-if="form.errors.description">{{ form.errors.description }}</div>
         </SFormRow>
 
         <SFormRow title="Обложка" name="img">
@@ -14,39 +15,37 @@
         </SFormRow>
 
         <SFormRow title="Жанр">
-            <select class="form-select" multiple aria-label="multiple select example" v-model="modelValue.genre">
-                <option v-for="genre in genres">{{ genre }}</option>
+            <select class="form-select" multiple aria-label="multiple select example" v-model="form.genre">
+                <option v-for="genre in genres" :key="genre" :value="genre">{{ genre }}</option>
             </select>
+            <div class="form-text text-danger" v-if="form.errors.description">{{ form.errors.description }}</div>
         </SFormRow>
 
         <SFormRow name="adult">
             <SCheckbox>18+</SCheckbox>
+            <div class="form-text text-danger" v-if="form.errors.adult">{{ form.errors.adult }}</div>
         </SFormRow>
         
-        <div class="justify-content-between d-flex">
+        <div class="d-flex gap-2">
             <SButton color="green" type="submit">Сохранить</SButton>
-            <SButton color="red" @click.prevent="$emit('close')">Закрыть</SButton>
+            <SButton color="red" @click.prevent="back">Отмена</SButton>
         </div>
     </SForm>
 </template>
 
 <script setup>
-    import { ref, watch } from 'vue'
-    // import debounce from 'lodash/debounce'
+    import { ref } from 'vue'
     import { SForm, SFormRow, SInput, SCheckbox, SButton } from 'startup-ui';
 
-    const inputTitle = ref(null)
+    defineEmits(['submit']);
 
-    const emit = defineEmits(['update', 'close']);
     const props = defineProps({
-        modelValue: Object,
-        errorTitle: Boolean
+        form: Object,
+        isEdit: { type: Boolean, default: false }
     });
 
-    const focusTitle = () => {
-        inputTitle.value?.$el.querySelector('input').focus()
-    }
-
+    const form = props.form;
+    
     const genres = ref([
         'Фантастика',
         'Драма',
@@ -62,21 +61,7 @@
         'Учебная',
     ]);
 
-    watch(() => props.modelValue.title, (newTitle) => {
-            if (!newTitle) return
-            sendTitle(newTitle)
-        },
-    )
-
-    watch(() => props.errorTitle, (isError) => {
-        if (isError){
-            focusTitle();
-        }
-    })
-
-    // const sendTitle = debounce((value) => {
-    //     console.log(`Отправили "${value}" на сервер`)
-    // }, 500)
-
-    defineExpose({focusTitle})
+    const back = () => {
+        window.history.back();
+    }
 </script>
